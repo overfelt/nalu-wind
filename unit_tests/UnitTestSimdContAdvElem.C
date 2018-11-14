@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <stk_util/environment/WallTime.hpp>
-#include <stk_simd/Simd.hpp>
+#include <SimdInterface.h>
 #include <stk_mesh/base/GetEntities.hpp>
 
 #include <UnitTestHelperObjects.h>

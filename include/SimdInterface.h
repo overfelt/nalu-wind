@@ -15,6 +15,11 @@
  *  algorithms.
  */
 
+// If building for the GPU, turn off simd types until Kokkos supports them.
+#ifdef KOKKOS_HAVE_CUDA
+#define USE_STK_SIMD_NONE
+#endif
+
 #include "stk_simd/Simd.hpp"
 #include "Kokkos_Macros.hpp"
 

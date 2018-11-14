@@ -45,7 +45,7 @@ TEST(PecletFunction, classic_simd)
 
   for (int i=0; i < 4; i++) {
     const DoubleType pecFac = pecFunc.execute(pecletNumbers[i]);
-    for (int is=0; is < stk::simd::ndoubles; is++) {
+    for (int is=0; is < sierra::nalu::simdLen; is++) {
       EXPECT_NEAR(stk::simd::get_data(pecFac, is),
                   pecletFactors[i], tolerance);
     }
@@ -79,7 +79,7 @@ TEST(PecletFunction, tanh_simd)
 
   for (int i=0; i < 3; i++) {
     const DoubleType pecFac = pecFunc.execute(pecletNumbers[i]);
-    for (int is=0; is < stk::simd::ndoubles; is++) {
+    for (int is=0; is < sierra::nalu::simdLen; is++) {
       EXPECT_NEAR(stk::simd::get_data(pecFac, is),
                   pecletFactors[i], tolerance);
     }

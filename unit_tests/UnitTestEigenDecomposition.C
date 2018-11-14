@@ -152,7 +152,7 @@ TEST(TestEigen, testeigendecomp3d_simd)
   DoubleType Q_[3][3], D_[3][3];
 
   // Initialize matrices
-  for (unsigned j = 0; j < stk::simd::ndoubles; ++j) {
+  for (unsigned j = 0; j < simdLen; ++j) {
     A3d_fixed_simd[0][0]._data[j] = A3d_fixed[0][0]*(j + 1);
     A3d_fixed_simd[0][1]._data[j] = A3d_fixed[0][1]*(j + 1);
     A3d_fixed_simd[0][2]._data[j] = A3d_fixed[0][2]*(j + 1);
@@ -173,7 +173,7 @@ TEST(TestEigen, testeigendecomp3d_simd)
       0.056736539229635605, 0.46782517604126655, -0.45581171527090225};
 
   for (unsigned j = 0; j < 3; ++j) {
-    for (unsigned is = 0; is < stk::simd::ndoubles; is++) {
+    for (unsigned is = 0; is < simdLen; is++) {
       EXPECT_NEAR(stk::simd::get_data(D_[j][j], is), (is+1)*lambda_gold[j], tol);
     }
   }
@@ -184,7 +184,7 @@ TEST(TestEigen, testeigendecomp2d_simd)
   DoubleType Q_[2][2], D_[2][2];
 
   // Initialize matrices
-  for (unsigned j = 0; j < stk::simd::ndoubles; ++j) {
+  for (unsigned j = 0; j < simdLen; ++j) {
     A2d_fixed_simd[0][0]._data[j] = A2d_fixed[0][0]*(j + 1);
     A2d_fixed_simd[0][1]._data[j] = A2d_fixed[0][1]*(j + 1);
     A2d_fixed_simd[1][1]._data[j] = A2d_fixed[1][1]*(j + 1);
@@ -199,7 +199,7 @@ TEST(TestEigen, testeigendecomp2d_simd)
       0.06282714486296648, 0.0027978551370335227};
 
   for (unsigned j = 0; j < 2; ++j) {
-    for (unsigned is = 0; is < stk::simd::ndoubles; is++) {
+    for (unsigned is = 0; is < simdLen; is++) {
       EXPECT_NEAR(stk::simd::get_data(D_[j][j], is), (is+1)*lambda_gold[j], tol);
     }
   }
@@ -212,7 +212,7 @@ TEST(TestEigen, testeigendecompandreconstruct3d_simd)
   DoubleType b_[3][3], Q_[3][3], D_[3][3];
 
   // Initialize matrices
-  for (unsigned j = 0; j < stk::simd::ndoubles; ++j) {
+  for (unsigned j = 0; j < simdLen; ++j) {
     if (j % 2 == 0) {
       A3d_rand_simd[0][0]._data[j] = a11*(j + 1);
       A3d_rand_simd[0][1]._data[j] = a12*(j + 1);
@@ -244,7 +244,7 @@ TEST(TestEigen, testeigendecompandreconstruct3d_simd)
   // Reconstructed matrix should be within tol of original
   for (unsigned j = 0; j < 3; ++j) {
     for (unsigned i = 0; i < 3; ++i) {
-      for (unsigned is = 0; is < stk::simd::ndoubles; is++) {
+      for (unsigned is = 0; is < simdLen; is++) {
         EXPECT_NEAR(stk::simd::get_data(b_[i][j], is), stk::simd::get_data(A3d_rand_simd[i][j], is), tol);
       }
     }
@@ -256,7 +256,7 @@ TEST(TestEigen, testeigendecompandreconstruct2d_simd)
   DoubleType b_[2][2], Q_[2][2], D_[2][2];
 
   // Initialize matrices
-  for (unsigned j = 0; j < stk::simd::ndoubles; ++j) {
+  for (unsigned j = 0; j < simdLen; ++j) {
     if (j % 2 == 0) {
       A2d_rand_simd[0][0]._data[j] = a11*(j + 1);
       A2d_rand_simd[0][1]._data[j] = a12*(j + 1);
@@ -280,7 +280,7 @@ TEST(TestEigen, testeigendecompandreconstruct2d_simd)
   // Reconstructed matrix should be within tol of original
   for (unsigned j = 0 ; j < 2; ++j) {
     for (unsigned i = 0; i < 2; ++i) {
-      for (unsigned is = 0; is < stk::simd::ndoubles; is++) {
+      for (unsigned is = 0; is < simdLen; is++) {
         EXPECT_NEAR(stk::simd::get_data(b_[i][j], is), stk::simd::get_data(A2d_rand_simd[i][j], is), tol);
       }
     }

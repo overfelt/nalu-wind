@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <stk_util/environment/WallTime.hpp>
-#include <stk_simd/Simd.hpp>
+#include <SimdInterface.h>
 #include <KokkosInterface.h>
 
 #include "UnitTestUtils.h"
@@ -12,7 +12,7 @@
 TEST(Simd, basic)
 {
 #if defined(STK_SIMD_AVX512) || defined(STK_SIMD_AVX) || defined(STK_SIMD_SSE)
-    EXPECT_EQ(stk::simd::nfloats, 2*stk::simd::ndoubles);
+    EXPECT_EQ(stk::simd::nfloats, 2*sierra::nalu::simdLen);
 #endif
 }
 
@@ -27,7 +27,7 @@ TEST(Simd, whichInstructions)
 #else
    std::cout<<"no simd instructions!"<<std::endl;
 #endif
-   std::cout<<", stk::simd::ndoubles="<<stk::simd::ndoubles<<std::endl;
+   std::cout<<", simdLen="<<sierra::nalu::simdLen<<std::endl;
 }
 
 typedef std::vector<double, non_std::AlignedAllocator<double,64> > aligned_vector;
@@ -53,10 +53,10 @@ TEST(Simd, stkMath)
   
   initialize(N, x, y);
   
-  for (int n=0; n < N; n+=stk::simd::ndoubles) {
-     const stk::simd::Double xl = stk::simd::load(&x[n]);
-     const stk::simd::Double yl = stk::simd::load(&y[n]);
-     stk::simd::Double zl = stk::math::abs(xl) * stk::math::exp(yl);
+  for (int n=0; n < N; n+=sierra::nalu::simdLen) {
+     const sierra::nalu::SimdDouble xl = stk::simd::load(&x[n]);
+     const sierra::nalu::SimdDouble yl = stk::simd::load(&y[n]);
+     sierra::nalu::SimdDouble zl = stk::math::abs(xl) * stk::math::exp(yl);
      stk::simd::store(&solution[n],zl);
   }   
   
@@ -68,7 +68,7 @@ TEST(Simd, stkMath)
 TEST(Simd, Views)
 {
    const int N = 3;
-   Kokkos::View<stk::simd::Double**> DoubleView("DoubleView",N,N);
+   Kokkos::View<sierra::nalu::SimdDouble**> DoubleView("DoubleView",N,N);
    
    for(int i=0; i<N; ++i) {
       for(int j=0; j<N; ++j) {
@@ -78,18 +78,18 @@ TEST(Simd, Views)
 
    for(int i=0; i<N; ++i) {
       for(int j=0; j<N; ++j) {
-         stk::simd::Double& d = DoubleView(i,j);
+         sierra::nalu::SimdDouble& d = DoubleView(i,j);
          std::cout<<i<<","<<j<<": ";
-         for(int k=0; k<stk::simd::ndoubles; ++k) {
+         for(int k=0; k<sierra::nalu::simdLen; ++k) {
             std::cout<<stk::simd::get_data(d,k)<<",";
          }
          std::cout<<std::endl;
       }
    }
 
-   stk::simd::Double& d = DoubleView(0,0);
+   sierra::nalu::SimdDouble& d = DoubleView(0,0);
    double* all = &d[0];
-   for(int i=0; i<N*N*stk::simd::ndoubles; ++i) {
+   for(int i=0; i<N*N*sierra::nalu::simdLen; ++i) {
      std::cout<<i<<": "<<all[i]<<std::endl;
    }
 }
